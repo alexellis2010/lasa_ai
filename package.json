@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/alexellis2010/lasa_ai#readme",
   "dependencies": {
+    "openai": "^4.24.1",
     "victor-db": "^0.1.3"
   }
 }
