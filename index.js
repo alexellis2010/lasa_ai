@@ -1,5 +1,3 @@
-const { toUnicode } = require("punycode");
-
 console.log("goodbye world")
 
 console.log([1, 2, 3]);
