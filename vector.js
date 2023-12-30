@@ -16,7 +16,8 @@ async function main() {
             model: "text-embedding-ada-002",
             input: qa.a,
             encoding_format: "float",
-        })
+        });
+        await new Promise((r) => setTimeout(r, 1000));
         obj.q = qa.q;
         obj.a = qa.a;
         obj.qe = qe.data[0].embedding;
