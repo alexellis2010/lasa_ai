@@ -1,23 +1,30 @@
-const stt = require('./stt.js').stt;
-const llm = require('./llm.js').llm;
-const tts = require('./tts.js').tts;
+const { stt, } = require('./stt.js');
+const { llm, } = require('./llm.js');
+const { tts, } = require('./tts.js');
+const { query, } = require('./db.js');
 
 async function main() {
-    let chat = [{role: 'system', content: 'You are a childish AI assistant named Xander. You provide accurate answers playfully.'}];
+    let chat = [{role: 'system', content: 'You are a childish AI assistant named Xander. You are the personal assistant to Alexander Ellis, who wishes to attend LASA high school. You know Alex personally from a prior question and answer session. You provide accurate answers playfully.'}];
     // AI Introduces itself
     const response = await llm(chat);
     await tts(response.content);
     chat.push(response);
     // Wait for user to ask something
     while(true) {
-        chat.push({role: 'user', content: await stt()});
+        const question = await stt();
+        chat.push({role: 'user', content: question});
         console.log('Thinking...');
+        const qas = await query(question);
+        chat.push({role: 'system', content: `Xander the AI assistant recalls these questions he asked of Alex and Alex's answers to them:
+${qas.map(qa => `Question: ${qa.q}
+Answer: ${qa.a}`).join('\n\n')}
+`});  
         const response = await llm(chat);
         await tts(response.content);
         chat.push(response);
         // Don't let the history go too long
-        if (chat.length > 9) {
-            chat.splice(1, 2);
+        if (chat.length > 13) {
+            chat.splice(1, 3);
         }
     }
 }
