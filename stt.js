@@ -11,39 +11,41 @@ process.stdin.setRawMode(true);
 
 const openai = new OpenAI();
 
-async function main() {
+module.exports.stt = async function stt() {
     const recordingInstance = sdl.audio.openDevice({ type: 'recording' }, { channels: 1, frequency: 16000, format: 's32lsb' });
     recordingInstance.play();
     let buffers = [];
     let toRecord = true;
-    process.stdin.on('keypress', async (ch, key) => {
-        if (key && key.ctrl && key.name === 'c') {
-            process.exit(1);
-        }
-        if (key && ch === ' ') {
-            await new Promise((r) => setTimeout(r, 500));
-            toRecord = false;
-            recordingInstance.close();
-            const fulllength = buffers.map(buff => buff.length).reduce((a, b) => a + b);
-            const audiobuffer = Buffer.alloc(fulllength);
-            for (let i = 0, j = 0; i < buffers.length; j += buffers[i].length, i++) {
-                const buff = buffers[i];
-                buff.copy(audiobuffer, j, 0, buff.length)
+    const outText = new Promise((resolve) => {
+        process.stdin.on('keypress', async (ch, key) => {
+            if (key && key.ctrl && key.name === 'c') {
+                process.exit(1);
             }
-            const encoder = new Lame({ output: 'buffer', bitwidth: 32, 'little-endian': true, bitrate: 64, raw: true, sfreq: 8 }).setBuffer(audiobuffer);
-            await encoder.encode();
-            const mp3buffer = encoder.getBuffer();
-            fs.writeFileSync('./audio.mp3', mp3buffer);
-            const transcription = await openai.audio.transcriptions.create({
-                file: fs.createReadStream('./audio.mp3'),
-                language: 'en',
-                model: "whisper-1",
-            });
-            fs.rmSync('./audio.mp3');
-            
-            console.log(transcription.text);
-            process.exit(0);
-        }
+            if (key && ch === ' ') {
+                await new Promise((r) => setTimeout(r, 750));
+                toRecord = false;
+                recordingInstance.close();
+                const fulllength = buffers.map(buff => buff.length).reduce((a, b) => a + b);
+                const audiobuffer = Buffer.alloc(fulllength);
+                for (let i = 0, j = 0; i < buffers.length; j += buffers[i].length, i++) {
+                    const buff = buffers[i];
+                    buff.copy(audiobuffer, j, 0, buff.length)
+                }
+                const encoder = new Lame({ output: 'buffer', bitwidth: 32, 'little-endian': true, bitrate: 64, raw: true, sfreq: 8 }).setBuffer(audiobuffer);
+                await encoder.encode();
+                const mp3buffer = encoder.getBuffer();
+                fs.writeFileSync('./audio.mp3', mp3buffer);
+                const transcription = await openai.audio.transcriptions.create({
+                    file: fs.createReadStream('./audio.mp3'),
+                    language: 'en',
+                    model: "whisper-1",
+                });
+                fs.rmSync('./audio.mp3');
+                
+                process.stdin.removeAllListeners('keypress');
+                resolve(transcription.text);
+            }
+        });
     });
     let isRecording = false;
     while (toRecord) {
@@ -60,5 +62,5 @@ async function main() {
         }
         await new Promise((r) => setTimeout(r, 100));
     }
-}
-main();
+    return await outText;
+};
