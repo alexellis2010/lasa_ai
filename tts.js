@@ -4,11 +4,11 @@ const OpenAI = require("openai");
 
 const openai = new OpenAI();
 
-async function main() {
+module.exports.tts = async function tts(input) {
     const mp3 = await openai.audio.speech.create({
         model: "tts-1",
         voice: "onyx",
-        input: "Today is a wonderful day to build something people love!",
+        input,
     });
     const mp3buffer = Buffer.from(await mp3.arrayBuffer());
     const decoder = new Lame({ output: 'buffer', bitwidth: 32, 'to-mono': true, 'little-endian': true}).setBuffer(mp3buffer)
@@ -24,5 +24,4 @@ async function main() {
             r();
         }
     }, 200));
-}
-main();
+};

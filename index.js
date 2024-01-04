@@ -1,26 +1,24 @@
-console.log("goodbye world")
+const stt = require('./stt.js').stt;
+const llm = require('./llm.js').llm;
+const tts = require('./tts.js').tts;
 
-console.log([1, 2, 3]);
-
-for (const element of [1, 2, 3]) {
-    console.log(element * element);
-}
-
-const obj = {"q": "How do you even?", "a": "I odd", "z": [1, 2, 3]};
-
-console.log(obj);
-
-for (const key of Object.keys(obj)) {
-    console.log(key);
-    console.log(obj[key]);
-    for (const char of obj[key]) {
-        console.log(char);
-        if (char instanceof String) console.log(char.charCodeAt());
+async function main() {
+    let chat = [{role: 'system', content: 'You are a childish AI assistant named Xander. You provide accurate answers playfully.'}];
+    // AI Introduces itself
+    const response = await llm(chat);
+    await tts(response.content);
+    chat.push(response);
+    // Wait for user to ask something
+    while(true) {
+        chat.push({role: 'user', content: await stt()});
+        console.log('Thinking...');
+        const response = await llm(chat);
+        await tts(response.content);
+        chat.push(response);
+        // Don't let the history go too long
+        if (chat.length > 9) {
+            chat.splice(1, 2);
+        }
     }
 }
-
-console.log([
-    [1, 2, 3],
-    [4, 5, 6],
-    [7, 8, 9],
-]);
+main();

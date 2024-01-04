@@ -2,13 +2,11 @@ const OpenAI =  require("openai")
 
 const openai = new OpenAI();
 
-async function main() {
+module.exports.llm = async function llm(messages) {
   const completion = await openai.chat.completions.create({
-    messages: [{ role: "system", content: "You are a helpful assistant." }],
+    messages,
     model: "gpt-3.5-turbo",
   });
 
-  console.log(completion.choices[0]);
-}
-
-main();
+  return completion.choices[0].message;
+};
