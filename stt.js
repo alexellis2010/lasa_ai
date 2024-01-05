@@ -7,6 +7,14 @@ const fs = require('fs');
 
 readline.emitKeypressEvents(process.stdin);
 
+async function ctrlC(ch, key) {
+    if (key && key.ctrl && key.name === 'c') {
+        process.exit(1);
+    }
+}
+
+process.stdin.on('keypress', ctrlC);
+
 process.stdin.setRawMode(true);
 
 const openai = new OpenAI();
@@ -18,9 +26,6 @@ module.exports.stt = async function stt() {
     let toRecord = true;
     const outText = new Promise((resolve) => {
         process.stdin.on('keypress', async (ch, key) => {
-            if (key && key.ctrl && key.name === 'c') {
-                process.exit(1);
-            }
             if (key && ch === ' ') {
                 await new Promise((r) => setTimeout(r, 750));
                 toRecord = false;
@@ -43,6 +48,7 @@ module.exports.stt = async function stt() {
                 fs.rmSync('./audio.mp3');
                 
                 process.stdin.removeAllListeners('keypress');
+                process.stdin.on('keypress', ctrlC);
                 resolve(transcription.text);
             }
         });
