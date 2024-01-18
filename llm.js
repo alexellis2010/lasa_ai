@@ -3,7 +3,7 @@
  */
 const OpenAI = require("openai")
 
-const openai = new OpenAI(); // global instance of openai object
+const openai = new OpenAI(); // Global instance of openai object
 // Takes an array of [message objects](https://platform.openai.com/docs/api-reference/chat/object) and returns the predicted message
 module.exports.llm = async function llm(messages) {
   // Defining what AI model to use
