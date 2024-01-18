@@ -6,9 +6,9 @@ const { LocalIndex } = require('vectra');
 const qavector = require('./qavector.json');
 const OpenAI = require("openai");
 
-// global instance of the openai object 
+// Global instance of the openai object 
 const openai = new OpenAI();
-// creating a Vectra vector database
+// Creating a Vectra vector database
 const index = new LocalIndex(path.join(__dirname, 'index'));
 // This function returns three questions and their answers like the question provided
 module.exports.query = async function query(question) {
