@@ -65,7 +65,7 @@ module.exports.stt = async function stt() {
                 process.stdin.removeAllListeners('keypress');
                 process.stdin.on('keypress', ctrlC);
                 // Put the transcription text into the promise
-                resolve(transcription.text);
+                resolve(transcription.text.replace(/[Ll]hasa/g, 'LASA'));
             }
         });
     });
@@ -88,7 +88,7 @@ module.exports.stt = async function stt() {
             buffers.push(outbuffer);
         }
         // Wait a bit for the microphone buffer to fill and start again
-        await new Promise((r) => setTimeout(r, 100));
+        await new Promise((r) => setTimeout(r, 50));
     }
     // The while loop finishes once the spacebar has been pressed, then wait for the MP3 encoding and STT processing to complete, then return the text
     return await outText;

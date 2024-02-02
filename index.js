@@ -12,7 +12,8 @@ async function main() {
     // AI Introduces itself
     // const response = await llm(chat);
     // This is part of the prompt we hardwired so that it does not just talk to itself, playing the role of itself and me
-    const response = {role: "assistant", content: "Hi Alex, this is Xander. Are you ready to get started on your admissions video for LASA?" }
+    const response = {role: "assistant", content: "Hi Alex, this is Xander. Are you ready to get started on your admissions video for LASA?" };
+    console.log('Xander:', response.content);
     await tts(response.content);
     chat.push(response);
     // Talk with Xander until the program is force quit
@@ -20,6 +21,7 @@ async function main() {
         // Wait for the speech to text to get the user's question for Xander
         const question = await stt();
         chat.push({role: 'user', content: question});
+        console.log('Alex:', question);
         // It will say the word thinking while the AI is thinking 
         console.log('Thinking...');
     
@@ -31,6 +33,7 @@ Answer: ${qa.a}`).join('\n\n')}
 `});
         // Get response from Xander,play it through the speaker, and add it to history 
         const response = await llm(chat);
+        console.log('Xander:', response.content);
         await tts(response.content);
         chat.push(response);
         // Don't let the history go too long because of LLM limitations
