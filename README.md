@@ -2,7 +2,7 @@
 
 This project is for [LASA](https://lasa.austinschools.org/) in which I describe myself using an AI that talks about me and pokes at me.
 
-TODO: insert video here
+<video src="https://github.com/alexellis2010/lasa_ai/assets/155187193/bc6e7a6c-6f75-4070-b8b7-68833e178bf9.mp4"></video>
 
 ## Usage
 
@@ -10,7 +10,7 @@ TODO: insert video here
 $ npm i
 $ export OPENAI_API_KEY=...
 $ node index.js
-(Ctrl+C to quit)
+(Wait for Xander to speak to you, then when "Recording" appears, you can speak to him. Press Space when you finish talking and then Xander will respond. Press Ctrl+C to quit)
 ```
 
 ## About
