@@ -2,7 +2,10 @@
 
 This project is for [LASA](https://lasa.austinschools.org/) in which I describe myself using an AI that talks about me and pokes at me.
 
-<video src="https://github.com/alexellis2010/lasa_ai/assets/155187193/bc6e7a6c-6f75-4070-b8b7-68833e178bf9.mp4"></video>
+<video src="https://github.com/alexellis2010/lasa_ai/assets/155187193/3b60dc70-846c-45fd-8462-a136d25699c0.mp4"></video>
+
+<!-- Removing this video because of the long pauses. Cut them out to hit the video limit LASA wants -->
+<!-- <video src="https://github.com/alexellis2010/lasa_ai/assets/155187193/bc6e7a6c-6f75-4070-b8b7-68833e178bf9.mp4"></video> -->
 
 ## Usage
 
